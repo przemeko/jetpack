@@ -77,7 +77,7 @@ phy.Particle.prototype.integrate = function(duration) {
 
     // Impose drag
     // Used to remove a bit of velocity at each frame
-    this.velocity.scale(Math.pow(this.damping, duration));
+    //this.velocity.scale(Math.pow(this.damping, duration));
 };
 
 /**

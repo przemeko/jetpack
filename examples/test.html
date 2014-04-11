@@ -26,9 +26,12 @@
                 var angleChange = angularSpeed * dt * 2 * Math.PI;
                 cube.rotation.y += angleChange;
                 particle.integrate(dt);
-                cube.position.x = particle.position.x;
+                //console.log(particle.position.x);
+              
+        cube.position.x = particle.position.x;
                 cube.position.y = particle.position.y;
                 cube.position.z = particle.position.z;
+                //console.log(particle.position.x);
                 // render
                 renderer.render(scene, camera);
 
@@ -63,6 +66,10 @@
             scene.add(cube);
 
             particle.setAcceleration(0,-10,0);
+            particle.setMass(2);
+            particle.setVelocity(0,0,35);
+            
+            //particle.integrate(0.5);
             // start animation
             render();
         </script>

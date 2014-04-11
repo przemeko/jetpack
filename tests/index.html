@@ -3,27 +3,13 @@
         <link rel="stylesheet" href="qunit-1.14.0.css">
         <script src="qunit-1.14.0.js"></script>
         <script src="../src/vector.js"></script>
+        <script src="../src/particle.js"></script>
     </head>
     <body>
         <div id="qunit"></div>
         <div id="qunit-fixture"></div>
-
-        <script>
-            QUnit.test("vector", function(assert) {
-               var v1 = new phy.Vector(1,2,3);
-               var v2 = new phy.Vector(1,2,3);
-               v2.add(v1);
-               assert.equal(true,v2.x === 2 && v2.y===4 && v2.z===6 , "add v1 to v2");
-            });
-
-/*
-            QUnit.test("test", function(assert) {
-                function square(x) {
-                    return x * x;
-                }
-                var result = square(2);
-                assert.equal(result, 4, "square(2) equals 4");
-            });*/
-        </script>
+        <script src="implementation.js"></script>
+        <script src="vector.js"></script>
+        <script src="particle.js"></script>
     </body>
 </html>
