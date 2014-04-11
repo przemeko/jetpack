@@ -1,0 +1,72 @@
+<html>
+    <head> 
+        <title>My first Three.js app</title> 
+        <style>
+            canvas { width: 800px; height: 800px; }
+        </style> 
+    </head> 
+    <body> 
+        <script src="three.min.js"></script>
+        <script src="../src/vector.js"></script> 
+        <script src="../src/particle.js"></script>
+
+        <div id="container"></div>
+
+        <script >
+            var particle = new phy.Particle();
+            // revolutions per second
+            var angularSpeed = 0.2;
+            var lastTime = 0;
+            var clock = new THREE.Clock();
+            var dt = 0;
+            // this function is executed on each animation frame
+            function render() {
+                // update
+                var dt = clock.getDelta();
+                var angleChange = angularSpeed * dt * 2 * Math.PI;
+                cube.rotation.y += angleChange;
+                particle.integrate(dt);
+                cube.position.x = particle.position.x;
+                cube.position.y = particle.position.y;
+                cube.position.z = particle.position.z;
+                // render
+                renderer.render(scene, camera);
+
+                // request new frame
+                requestAnimationFrame(function() {
+                    render();
+                });
+            }
+
+            // renderer
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setSize(800, 800);
+            document.body.appendChild(renderer.domElement);
+
+            // camera
+            var camera = new THREE.PerspectiveCamera(45, 1, 1, 1000);
+            camera.position.z = 500;
+
+            // scene
+            var scene = new THREE.Scene();
+
+            // cube
+            var cube = new THREE.Mesh(new THREE.CubeGeometry(10, 10, 10), new THREE.MeshBasicMaterial({
+                wireframe: true,
+                color: 'white'
+            }));
+            cube.rotation.x = Math.PI * 0.1;
+            cube.rotation.y = Math.PI * 0.1;
+            cube.position.x = 0;
+            cube.position.y = 0;
+            cube.position.z = 0;
+            scene.add(cube);
+
+            particle.setAcceleration(0,-10,0);
+            // start animation
+            render();
+        </script>
+
+
+    </body> 
+</html>
