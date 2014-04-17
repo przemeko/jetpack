@@ -1,12 +1,15 @@
 var phy = phy || {};
 
-phy.Particle = function() {
+phy.Particle = function(x, y, z) {
 
+    x = x || 0;
+    y = y || 0;
+    z = z || 0;
     /**
      * @param position
      * @type Vector
      */
-    this.position = new phy.Vector();
+    this.position = new phy.Vector(x, y, z);
 
     /**
      * @param velocity
@@ -37,7 +40,7 @@ phy.Particle = function() {
      * @param dumping
      * @type Number
      */
-    this.damping;
+    this.damping = 1;
 
     /**
      * @param mass
@@ -57,27 +60,46 @@ phy.Particle = function() {
     this.resultingAcc;
 };
 
+/**
+ * @method integrate
+ * @param {Number} duration
+ * @return {undefined}
+ */
 phy.Particle.prototype.integrate = function(duration) {
 
     if (duration === 0) {
         return false;
     }
     // update linear position
-    // x = vx * dt (for x axis)
+    // x = x0 + vx * dt (for x axis)
     this.position.addScaledVector(this.velocity, duration);
 
     // Work out the acceleration from the force
-    // ax = Fx/m (for x axis)
+    // ax = a0 + Fx/m (for x axis)
     this.resultingAcc = this.acceleration;
     this.resultingAcc.addScaledVector(this.forceAccum, this.inverseMass);
 
     // Update linear velocity from the acceleration
-    // vx = ax*dt (for x axis)
+    // vx = v0 + ax*dt (for x axis)
     this.velocity.addScaledVector(this.resultingAcc, duration);
 
     // Impose drag
     // Used to remove a bit of velocity at each frame
-    //this.velocity.scale(Math.pow(this.damping, duration));
+    this.velocity.scale(Math.pow(this.damping, duration));
+    
+    //clear the forces
+    this.forceAccum.clear();
+};
+
+/**
+ * @method addForce
+ * @param {Vector} force
+ * @return {Particle} this
+ */
+phy.Particle.prototype.addForce = function(force) {
+    this.forceAccum.add(force);
+    
+    return this;
 };
 
 /**

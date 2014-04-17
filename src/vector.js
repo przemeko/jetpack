@@ -147,3 +147,18 @@ phy.Vector.prototype.normalize = function() {
 
     return this;
 };
+
+/**
+ * Set all values to zeros
+ * 
+ * @method clear
+ * @return {Vector} this
+ */
+phy.Vector.prototype.clear = function() {
+    
+    this.x = 0;
+    this.y = 0;
+    this.z = 0;
+
+    return this;
+};

@@ -1,12 +1,13 @@
 <html>
     <head> 
-        <title>My first Three.js app</title> 
+        <title>Three.js initial setup</title> 
         <style>
             canvas { width: 800px; height: 800px; }
         </style> 
     </head> 
     <body> 
-        <script src="three.min.js"></script>
+        <script src="three/three.min.js"></script>
+        <script src="three/OrbitControls.js"></script>
         <script src="../src/vector.js"></script> 
         <script src="../src/particle.js"></script>
 
@@ -19,27 +20,6 @@
             var lastTime = 0;
             var clock = new THREE.Clock();
             var dt = 0;
-            // this function is executed on each animation frame
-            function render() {
-                // update
-                var dt = clock.getDelta();
-                var angleChange = angularSpeed * dt * 2 * Math.PI;
-                cube.rotation.y += angleChange;
-                particle.integrate(dt);
-                //console.log(particle.position.x);
-              
-        cube.position.x = particle.position.x;
-                cube.position.y = particle.position.y;
-                cube.position.z = particle.position.z;
-                //console.log(particle.position.x);
-                // render
-                renderer.render(scene, camera);
-
-                // request new frame
-                requestAnimationFrame(function() {
-                    render();
-                });
-            }
 
             // renderer
             var renderer = new THREE.WebGLRenderer();
@@ -49,9 +29,16 @@
             // camera
             var camera = new THREE.PerspectiveCamera(45, 1, 1, 1000);
             camera.position.z = 500;
-
+            
             // scene
             var scene = new THREE.Scene();
+            var controls = new THREE.OrbitControls( camera, renderer.domElement );
+            
+            var geometry = new THREE.PlaneGeometry(400, 400);
+            var material = new THREE.MeshBasicMaterial({color: 0x555555, side: THREE.DoubleSide});
+            var plane = new THREE.Mesh(geometry, material);
+            plane.rotation.x = 90;
+            scene.add(plane);
 
             // cube
             var cube = new THREE.Mesh(new THREE.CubeGeometry(10, 10, 10), new THREE.MeshBasicMaterial({
@@ -65,13 +52,36 @@
             cube.position.z = 0;
             scene.add(cube);
 
-            particle.setAcceleration(0,-10,0);
+            particle.setAcceleration(0, -10, 0);
             particle.setMass(2);
-            particle.setVelocity(0,0,35);
-            
+            particle.setVelocity(10, 5, 35);
+            particle.setDamping(0.99);
+
             //particle.integrate(0.5);
             // start animation
             render();
+
+            // this function is executed on each animation frame
+            function render() {
+                // update
+                var dt = clock.getDelta();
+                //var angleChange = angularSpeed * dt * 2 * Math.PI;
+                //cube.rotation.y += angleChange;
+                particle.integrate(dt);
+                //console.log(particle.position.x);
+
+                cube.position.x = particle.position.x;
+                cube.position.y = particle.position.y;
+                cube.position.z = particle.position.z;
+                //console.log(particle.position.x);
+                // render
+                renderer.render(scene, camera);
+
+                // request new frame
+                requestAnimationFrame(function() {
+                    render();
+                });
+            }
         </script>
 
 
