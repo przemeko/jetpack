@@ -1,6 +1,6 @@
 QUnit.test("implementation", function(assert) {
-    var v1 = new phy.Vector(1,2,3);
-    var v2 = new phy.Vector(4,5,6);
+    var v1 = new jetpack.Vector(1,2,3);
+    var v2 = new jetpack.Vector(4,5,6);
     assert.strictEqual(v1.x, 1, "init Vector: x");
     assert.strictEqual(v1.y ,2, "init Vector: y");
     assert.strictEqual(v1.z, 3 , "init Vector: z");

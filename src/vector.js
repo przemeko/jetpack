@@ -1,6 +1,6 @@
-var phy = phy || {};
+var jetpack = jetpack || {};
 
-phy.Vector = function(x, y, z) {
+jetpack.Vector = function(x, y, z) {
 
     this.x = x || 0;
     this.y = y || 0;
@@ -12,7 +12,7 @@ phy.Vector = function(x, y, z) {
  * @param {Vector} vect
  * @return {Vector} this
  */
-phy.Vector.prototype.add = function(vect) {
+jetpack.Vector.prototype.add = function(vect) {
 
     this.x += vect.x;
     this.y += vect.y;
@@ -29,7 +29,7 @@ phy.Vector.prototype.add = function(vect) {
  * @param {Number} scalar
  * @return {Vector} this
  */
-phy.Vector.prototype.addScaledVector = function(vect, scalar) {
+jetpack.Vector.prototype.addScaledVector = function(vect, scalar) {
 
     this.x += vect.x * scalar;
     this.y += vect.y * scalar;
@@ -45,7 +45,7 @@ phy.Vector.prototype.addScaledVector = function(vect, scalar) {
  * @param {number} scalar
  * @return {Vector} this
  */
-phy.Vector.prototype.scale = function(scalar) {
+jetpack.Vector.prototype.scale = function(scalar) {
 
     this.x *= scalar;
     this.y *= scalar;
@@ -60,7 +60,7 @@ phy.Vector.prototype.scale = function(scalar) {
  * @param {Vector} vect
  * @return {number}
  */
-phy.Vector.prototype.scalarProduct = function(vect) {
+jetpack.Vector.prototype.scalarProduct = function(vect) {
 
     return this.x * vect.x * this.y * vect.y * this.z * vect.z;
 };
@@ -71,9 +71,9 @@ phy.Vector.prototype.scalarProduct = function(vect) {
  * @param {Vector} vect
  * @return {Vector} new vector
  */
-phy.Vector.prototype.vectorProduct = function(vect) {
+jetpack.Vector.prototype.vectorProduct = function(vect) {
 
-    var prod = new phy.Vector();
+    var prod = new jetpack.Vector();
     prod.x = this.y * vect.z - this.z * vect.y;
     prod.y = this.z * vect.x - this.x * vect.z;
     prod.z = this.x * vect.y - this.y * vect.x;
@@ -88,9 +88,9 @@ phy.Vector.prototype.vectorProduct = function(vect) {
  * @param {Vector} vect
  * @return {Vector} new vector
  */
-phy.Vector.prototype.componentProduct = function(vect) {
+jetpack.Vector.prototype.componentProduct = function(vect) {
 
-    var prod = new phy.Vector();
+    var prod = new jetpack.Vector();
     prod.x = this.x * vect.x;
     prod.y = this.y * vect.y;
     prod.z = this.z * vect.z;
@@ -102,7 +102,7 @@ phy.Vector.prototype.componentProduct = function(vect) {
  * @method invert
  * @return {Vector} this
  */
-phy.Vector.prototype.invert = function() {
+jetpack.Vector.prototype.invert = function() {
 
     this.x = -this.x;
     this.y = -this.y;
@@ -116,7 +116,7 @@ phy.Vector.prototype.invert = function() {
  * @method magnitude
  * @return {number}
  */
-phy.Vector.prototype.magnitude = function() {
+jetpack.Vector.prototype.magnitude = function() {
 
     return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
 };
@@ -127,7 +127,7 @@ phy.Vector.prototype.magnitude = function() {
  * @method magnitude magnitude without sqrt
  * @return {number}
  */
-phy.Vector.prototype.squareMagnitude = function() {
+jetpack.Vector.prototype.squareMagnitude = function() {
 
     return this.x * this.x + this.y * this.y + this.z * this.z;
 };
@@ -137,7 +137,7 @@ phy.Vector.prototype.squareMagnitude = function() {
  * @method normalize
  * @return {Vector} this
  */
-phy.Vector.prototype.normalize = function() {
+jetpack.Vector.prototype.normalize = function() {
 
     var l = 1 / this.magnitude();
 
@@ -154,7 +154,7 @@ phy.Vector.prototype.normalize = function() {
  * @method clear
  * @return {Vector} this
  */
-phy.Vector.prototype.clear = function() {
+jetpack.Vector.prototype.clear = function() {
     
     this.x = 0;
     this.y = 0;

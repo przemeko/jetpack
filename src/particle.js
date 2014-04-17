@@ -1,6 +1,6 @@
-var phy = phy || {};
+var jetpack = jetpack || {};
 
-phy.Particle = function(x, y, z) {
+jetpack.Particle = function(x, y, z) {
 
     x = x || 0;
     y = y || 0;
@@ -9,19 +9,19 @@ phy.Particle = function(x, y, z) {
      * @param position
      * @type Vector
      */
-    this.position = new phy.Vector(x, y, z);
+    this.position = new jetpack.Vector(x, y, z);
 
     /**
      * @param velocity
      * @type Vector
      */
-    this.velocity = new phy.Vector();
+    this.velocity = new jetpack.Vector();
 
     /**
      * @param position
      * @type Vector
      */
-    this.acceleration = new phy.Vector();
+    this.acceleration = new jetpack.Vector();
 
     /**
      * Holds the accumulated force to be applied at the next
@@ -31,7 +31,7 @@ phy.Particle = function(x, y, z) {
      * @param forceAccum
      * @type Vector
      */
-    this.forceAccum = new phy.Vector();
+    this.forceAccum = new jetpack.Vector();
 
     /**
      * Amount of damping applied to linear motion.
@@ -65,7 +65,7 @@ phy.Particle = function(x, y, z) {
  * @param {Number} duration
  * @return {undefined}
  */
-phy.Particle.prototype.integrate = function(duration) {
+jetpack.Particle.prototype.integrate = function(duration) {
 
     if (duration === 0) {
         return false;
@@ -96,7 +96,7 @@ phy.Particle.prototype.integrate = function(duration) {
  * @param {Vector} force
  * @return {Particle} this
  */
-phy.Particle.prototype.addForce = function(force) {
+jetpack.Particle.prototype.addForce = function(force) {
     this.forceAccum.add(force);
     
     return this;
@@ -108,7 +108,7 @@ phy.Particle.prototype.addForce = function(force) {
  * @param {number} scalar
  * @return {Particle} this
  */
-phy.Particle.prototype.setMass = function(scalar) {
+jetpack.Particle.prototype.setMass = function(scalar) {
 
     this.mass = scalar;
     this.inverseMass = 1 / scalar;
@@ -120,7 +120,7 @@ phy.Particle.prototype.setMass = function(scalar) {
  * @method getMass
  * @return {Number} mass
  */
-phy.Particle.prototype.getMass = function() {
+jetpack.Particle.prototype.getMass = function() {
 
     return this.mass;
 };
@@ -133,9 +133,9 @@ phy.Particle.prototype.getMass = function() {
  * @param {Number} z
  * @return {Particle} this
  */
-phy.Particle.prototype.setPosition = function(x, y, z) {
+jetpack.Particle.prototype.setPosition = function(x, y, z) {
 
-    this.position = new phy.Vector(x, y, z);
+    this.position = new jetpack.Vector(x, y, z);
 
     return this;
 };
@@ -145,7 +145,7 @@ phy.Particle.prototype.setPosition = function(x, y, z) {
  * @method getPosition
  * @return {Vector} position
  */
-phy.Particle.prototype.getPosition = function() {
+jetpack.Particle.prototype.getPosition = function() {
 
     return this.position;
 };
@@ -158,9 +158,9 @@ phy.Particle.prototype.getPosition = function() {
  * @param {Number} z
  * @return {Particle} this
  */
-phy.Particle.prototype.setVelocity = function(x, y, z) {
+jetpack.Particle.prototype.setVelocity = function(x, y, z) {
 
-    this.velocity = new phy.Vector(x, y, z);
+    this.velocity = new jetpack.Vector(x, y, z);
 
     return this;
 };
@@ -170,7 +170,7 @@ phy.Particle.prototype.setVelocity = function(x, y, z) {
  * @method getVelocity
  * @return {Vector} velocity
  */
-phy.Particle.prototype.getVelocity = function() {
+jetpack.Particle.prototype.getVelocity = function() {
 
     return this.velocity;
 };
@@ -183,9 +183,9 @@ phy.Particle.prototype.getVelocity = function() {
  * @param {Number} z
  * @return {Particle} this
  */
-phy.Particle.prototype.setAcceleration = function(x, y, z) {
+jetpack.Particle.prototype.setAcceleration = function(x, y, z) {
 
-    this.acceleration = new phy.Vector(x, y, z);
+    this.acceleration = new jetpack.Vector(x, y, z);
 
     return this;
 };
@@ -195,7 +195,7 @@ phy.Particle.prototype.setAcceleration = function(x, y, z) {
  * @method getAcceleration
  * @return {Vector} velocity
  */
-phy.Particle.prototype.getAcceleration = function() {
+jetpack.Particle.prototype.getAcceleration = function() {
 
     return this.acceleration;
 };
@@ -206,7 +206,7 @@ phy.Particle.prototype.getAcceleration = function() {
  * @param {number} scalar
  * @return {Particle} this
  */
-phy.Particle.prototype.setDamping = function(scalar) {
+jetpack.Particle.prototype.setDamping = function(scalar) {
 
     this.damping = scalar;
     return this;

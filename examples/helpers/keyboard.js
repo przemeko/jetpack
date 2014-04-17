@@ -1,6 +1,6 @@
-var phy = phy || {};
+var jetpack = jetpack || {};
 
-phy.keyboard = function() {
+jetpack.keyboard = function() {
     var keyCode = 0;
     
     var handleKeyDown = function(e) {

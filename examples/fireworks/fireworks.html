@@ -57,7 +57,7 @@
                 var pY = 0; //Math.random() * 500 - 250;
                 var pZ = 0; //Math.random() * 500 - 250;
                 particle = new THREE.Vector3(pX, pY, pZ);
-                particle.physics = new phy.Particle(pX, pY, pZ);
+                particle.physics = new jetpack.Particle(pX, pY, pZ);
                 particle.physics.setVelocity(0, 20, 0);
                 particle.physics.setAcceleration(0, -10, 0);
                 particle.age = 0;
@@ -97,7 +97,7 @@
                 var dt = clock.getDelta();
                 pCount = particleCount;
 
-                if (phy.keyboard.spacebar()) {
+                if (jetpack.keyboard.spacebar()) {
                     getParticlesFromPool(Math.random()*10);
                 }
                 while (pCount--) {
