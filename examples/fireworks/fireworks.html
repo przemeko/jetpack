@@ -69,7 +69,8 @@
             // create the particle system
             var particleSystem = new THREE.ParticleSystem(particles, pMaterial);
 
-            var getParticlesFromPool = function(num=1) {
+            var getParticlesFromPool = function(num) {
+            	var num = num || 1;
                 for (var i = 0; i < particleCount; i++) {
                     if (particles.vertices[i].visible === false) {
                             particles.vertices[i].visible = true;
