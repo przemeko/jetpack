@@ -1,0 +1,138 @@
+<html>
+    <head> 
+        <title>Fireworks</title> 
+        <style>
+            canvas { width: 800px; height: 800px; }
+        </style> 
+    </head> 
+    <body> 
+        <script src="../three/three.min.js"></script>
+        <script src="../three/OrbitControls.js"></script>
+        <script src="../helpers/keyboard.js"></script>
+        <script src="../../src/vector.js"></script> 
+        <script src="../../src/particle.js"></script>
+        <script src="../../src/forces/gravity.js"></script>
+
+        <div id="container"></div>
+        <div id="terminal"></div>
+        <script>
+            var clock = new THREE.Clock();
+            var dt = 0;
+
+            // renderer
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setSize(800, 800);
+            document.body.appendChild(renderer.domElement);
+
+            // camera
+            var camera = new THREE.PerspectiveCamera(45, 1, 1, 1000);
+            camera.position.z = 500;
+
+            // scene
+            var scene = new THREE.Scene();
+            var controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+            var geometry = new THREE.PlaneGeometry(400, 400);
+            var material = new THREE.MeshBasicMaterial({color: 0x555555, side: THREE.DoubleSide});
+            var plane = new THREE.Mesh(geometry, material);
+            plane.rotation.x = 90;
+            scene.add(plane);
+
+            // create the particle variables
+            var particleCount = 1200;
+            var particles = new THREE.Geometry();
+            var pMaterial = new THREE.ParticleBasicMaterial({
+                color: 0xFFFFFF,
+                size: 5
+            });
+
+            var particleRules = {
+                minAge: 1,
+                maxAge: 3
+            };
+            // now create the individual particles
+            for (var p = 0; p < particleCount; p++) {
+                var pX = 0;
+                var pY = 0;
+                var pZ = 0;
+                particle = new THREE.Vector3(pX, pY, pZ);
+                particle.physics = new jetpack.Particle(pX, pY, pZ);
+                particle.physics.setVelocity(0, 20, 0);
+                //particle.physics.setAcceleration(0, -10, 0);
+                particle.physics.addForce(new jetpack.forces.Gravity(0,-20,0));
+                particle.age = 0;
+                particle.visible = false;
+                // add it to the geometry
+                particles.vertices.push(particle);
+            }
+
+            // create the particle system
+            var particleSystem = new THREE.ParticleSystem(particles, pMaterial);
+
+            var getParticlesFromPool = function(num) {
+            	var num = num || 1;
+                for (var i = 0; i < particleCount; i++) {
+                    if (particles.vertices[i].visible === false) {
+                            particles.vertices[i].visible = true;
+                            particles.vertices[i].age = Math.random()*particleRules.maxAge + particleRules.minAge;
+                            particles.vertices[i].x = particles.vertices[i].y = particles.vertices[i].z = 0;
+                            particles.vertices[i].physics.setVelocity(Math.random() * 20-10, Math.random() * 40, Math.random() * 40-20);
+                            particle.physics.setAcceleration(0, -Math.random() * 40, 0);
+                        num--;
+                        if (num <=0) {
+                            break;
+                        }
+                    }
+                }
+            };
+            particleSystem.sortParticles = true;
+            // add it to the scene
+            scene.add(particleSystem);
+
+            var pCount;
+            render();
+
+            // this function is executed on each animation frame
+            function render() {
+                var dt = clock.getDelta();
+                pCount = particleCount;
+
+                if (jetpack.keyboard.spacebar()) {
+                    getParticlesFromPool(Math.random()*10);
+                }
+                while (pCount--) {
+
+                    // get the particle
+                    var particle = particles.vertices[pCount];
+                    if (particle.visible) {
+                        particle.physics.integrate(dt);
+                        particle.age -= dt;
+
+                        particle.x = particle.physics.position.x;
+                        particle.y = particle.physics.position.y;
+                        particle.z = particle.physics.position.z;
+
+                        if (particle.age <= 0) {
+                            particle.visible = false;
+                            particle.x = particle.y = particle.z = 0;
+                            particle.physics.position.x = particle.physics.position.y = particle.physics.position.z = 0;
+                        }
+                    }
+                }
+                // flag to the particle system
+                // that we've changed its vertices.
+                particleSystem.geometry.verticesNeedUpdate = true;
+
+                renderer.render(scene, camera);
+
+                // request new frame
+                requestAnimationFrame(function() {
+                    render();
+                });
+            }
+        </script>
+
+
+    </body> 
+</html>
+
