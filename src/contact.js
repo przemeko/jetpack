@@ -1,13 +1,52 @@
 var jetpack = jetpack || {};
 
 jetpack.contact = function(particleA, particleB, restitution) {
+    /**
+     * particleA
+     * All calculation we do in perspective of this particle
+     * 
+     * @type {Particle}
+     */
     this.particleA = particleA || new jetpack.Particle();
+
+    /**
+     * particleB
+     * 
+     * @type {Particle}
+     */
     this.particleB = particleB || new jetpack.Particle();
+
+    /**
+     * restitution
+     * Holds the normal restitution coefficient at the contact.
+     * 
+     * 
+     * @type {Number}
+     */
     this.restitution = restitution || 1;
+
+    /**
+     * Holds the direction of the contact in world coordinates.
+     * 
+     * @type {Vector}
+     */
     this.contactNormal = new jetpack.Vector();
+
+    /**
+     * Holds the depth of penetration at the contact.
+     * A negative depth represents two objects that have no interpenetration.
+     * A depth of zero represents two objects that are merely touching.
+     * 
+     * @type {Number}
+     */
+    this.penetration = -1;
+
+
+    // helpers
 
     this.relativeVelocity = new jetpack.Vector();
     this.impulsePerInverseMass = new jetpack.Vector();
+    this.movePerInverseMass = new jetpack.Vector();
     this.separatingVelocity = 0;
     this.newSeparatingVelocity = 0;
     this.deltaVelocity = 0;
@@ -16,7 +55,8 @@ jetpack.contact = function(particleA, particleB, restitution) {
 };
 
 jetpack.contact.prototype.resolve = function(duration) {
-
+    this.resolveVelocity(duration);
+    this.resolveInterpenetration(duration);
 };
 
 jetpack.contact.prototype.calculateSeparatingVelocity = function() {
@@ -26,6 +66,12 @@ jetpack.contact.prototype.calculateSeparatingVelocity = function() {
     return this.relativeVelocity.scalarProduct(this.contactNormal);
 };
 
+/**
+ * Change velocity of particles
+ * 
+ * @param {Number} duration
+ * @returns {void}
+ */
 jetpack.contact.prototype.resolveVelocity = function(duration) {
 
     // Find the velocity in the direction of the contact.
@@ -62,14 +108,42 @@ jetpack.contact.prototype.resolveVelocity = function(duration) {
     // and are proportional to the inverse mass.
 
     var imp = new jetpack.Vector();
-    var vel = new jetpack.Vector();
-    
+
     imp.set(impulsePerInverseMass).scale(this.particleA.getInverseMass());
-    vel.set(this.particleA.getVelocity()).add(imp);
-    this.particleA.getVelocity().set(vel);
-    
+    this.particleA.getVelocity().add(imp);
+
     imp.set(impulsePerInverseMass).scale(this.particleB.getInverseMass());
-    vel.set(this.particleB.getVelocity()).add(imp);
-    this.particleB.getVelocity().set(vel);
+    this.particleB.getVelocity().add(imp);
+};
+
+/**
+ * Change position of particles
+ * 
+ * @param {Number} duration
+ * @returns {void}
+ */
+jetpack.contact.prototype.resolveInterpenetration = function(duration) {
+
+    if (this.penetration <= 0) {
+        return;
+    }
+
+    this.totalInverseMass = this.particleA.getInverseMass() + this.particleB.getInverseMass();
+
+    if (this.totalInverseMass <= 0) {
+        return;
+    }
+
+    this.movePerInverseMass
+            .set(this.contactNormal)
+            .scale(-this.penetration * this.particleA.getInverseMass() / this.totalInverseMass);
+    this.particleA.getPosition()
+            .add(this.movePerInverseMass);
+
+    this.movePerInverseMass
+            .set(this.contactNormal)
+            .scale(-this.penetration * this.particleB.getInverseMass() / this.totalInverseMass);
+    this.particleB.getPosition()
+            .add(this.movePerInverseMass);
 
 };
