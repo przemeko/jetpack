@@ -1,5 +1,13 @@
 var jetpack = jetpack || {};
 
+/**
+ * Basic block
+ * 
+ * @param {Number} x
+ * @param {Number} y
+ * @param {Number} z
+ * @return {Particle} this
+ */
 jetpack.Particle = function(x, y, z) {
 
     x = x || 0;
@@ -18,11 +26,24 @@ jetpack.Particle = function(x, y, z) {
     this.velocity = new jetpack.Vector();
 
     /**
-     * @param position
+     * @param acceleration
      * @type Vector
      */
     this.acceleration = new jetpack.Vector();
 
+    /**
+     * @param forces
+     * @type Array
+     */
+    this.forces = [];
+
+    /**
+     * Number of forces
+     * 
+     * @param forcesNum
+     * @type Number
+     */
+    this.forcesNum = 0;
     /**
      * Holds the accumulated force to be applied at the next
      * simulation iteration only. This value is zeroed at each
@@ -55,9 +76,6 @@ jetpack.Particle = function(x, y, z) {
      * @type Number
      */
     this.inverseMass = 1;
-
-    // tmp
-    this.resultingAcc;
 };
 
 /**
@@ -74,21 +92,27 @@ jetpack.Particle.prototype.integrate = function(duration) {
     // x = x0 + vx * dt (for x axis)
     this.position.addScaledVector(this.velocity, duration);
 
-    // Work out the acceleration from the force
-    // ax = a0 + Fx/m (for x axis)
-    this.resultingAcc = this.acceleration;
-    this.resultingAcc.addScaledVector(this.forceAccum, this.inverseMass);
+    // D'Alembert's principle -  if we have a set of forces acting 
+    // on an object, we can replace all those forces with a single force
+    // Work out the acceleration from all forces
+    // ax = a0 + Fx/m (for x axis, Fx - sum of all x axis forces)
+    for (var i = 0; i < this.forcesNum; i++) {
+        this.forceAccum.add(this.forces[i].calculateForce(this, duration));
+    }
+    this.acceleration.addScaledVector(this.forceAccum, this.inverseMass);
 
     // Update linear velocity from the acceleration
     // vx = v0 + ax*dt (for x axis)
-    this.velocity.addScaledVector(this.resultingAcc, duration);
+    this.velocity.addScaledVector(this.acceleration, duration);
 
     // Impose drag
     // Used to remove a bit of velocity at each frame
+    //@TODO remove to external forces
     this.velocity.scale(Math.pow(this.damping, duration));
-    
+
     //clear the forces
     this.forceAccum.clear();
+    this.acceleration.clear();
 };
 
 /**
@@ -97,8 +121,8 @@ jetpack.Particle.prototype.integrate = function(duration) {
  * @return {Particle} this
  */
 jetpack.Particle.prototype.addForce = function(force) {
-    this.forceAccum.add(force);
-    
+    this.forces.push(force);
+    this.forcesNum = this.forces.length;
     return this;
 };
 
@@ -123,6 +147,16 @@ jetpack.Particle.prototype.setMass = function(scalar) {
 jetpack.Particle.prototype.getMass = function() {
 
     return this.mass;
+};
+
+/**
+ * 
+ * @method getInverseMass
+ * @return {Number} mass
+ */
+jetpack.Particle.prototype.getInverseMass = function() {
+
+    return this.inverseMass;
 };
 
 /**

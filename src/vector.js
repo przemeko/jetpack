@@ -1,11 +1,20 @@
 var jetpack = jetpack || {};
 
+/**
+ * Class for vector operations
+ * 
+ * @param {Number} x
+ * @param {Number} y
+ * @param {Number} z
+ * @return {Vector} this
+ */
 jetpack.Vector = function(x, y, z) {
 
     this.x = x || 0;
     this.y = y || 0;
     this.z = z || 0;
 };
+
 /**
  * 
  * @method add
@@ -17,6 +26,21 @@ jetpack.Vector.prototype.add = function(vect) {
     this.x += vect.x;
     this.y += vect.y;
     this.z += vect.z;
+
+    return this;
+};
+
+/**
+ * 
+ * @method sub
+ * @param {Vector} vect
+ * @return {Vector} this
+ */
+jetpack.Vector.prototype.sub = function(vect) {
+
+    this.x -= vect.x;
+    this.y -= vect.y;
+    this.z -= vect.z;
 
     return this;
 };
@@ -159,6 +183,21 @@ jetpack.Vector.prototype.clear = function() {
     this.x = 0;
     this.y = 0;
     this.z = 0;
+
+    return this;
+};
+
+/**
+ * Set this vector equal to vect
+ * 
+ * @param {Vector} vect
+ * @return {Vector} this
+ */
+jetpack.Vector.prototype.set = function(vect) {
+    
+    this.x = vect.x;
+    this.y = vect.y;
+    this.z = vect.z;
 
     return this;
 };

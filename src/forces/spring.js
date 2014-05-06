@@ -22,7 +22,7 @@ jetpack.forces.Spring = function(otherParticle, springConstant, restLength) {
  * Hook's law
  * F = -k(r - r0)  // r0 - rest length
  * in 3d:
- * F =  -k(|d| - r0)dn // dn - normalize d
+ * F =  -k(|d| - r0)dn // dn - normalized d
  * 
  * @param {Particle} particle
  * @param {Number} duration
@@ -38,11 +38,9 @@ jetpack.forces.Spring.prototype.calculateForce = function(particle, duration) {
     // Calculate the magnitude of the force 
     this.magnitude = Math.abs(this.vector.magnitude() - this.restLength); // |d| - r0
 
-    // Calculate the final force and apply it
+    // // Calculate the final force and return it
     this.vector.normalize(); // dn
-    this.vector.scale(-this.springConstant*this.magnitude);
-    
-    return this.vector;
+    return this.vector.scale(-this.springConstant*this.magnitude);
 };
 
 
